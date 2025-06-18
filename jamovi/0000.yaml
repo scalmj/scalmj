@@ -1,0 +1,30 @@
+---
+title: Useful Stats for Neuropsychologits
+name: scalmj
+version: 0.0.3
+jms: '1.0'
+authors:
+  - Marcello Gallucci
+  - Nicolò Aiello
+  - Daniele Romano
+  - Giorgio Arcara
+  - Alessio Facchin
+maintainer: marcello gallucci (mcfanda@gmail.com)
+date: '2021-03-15'
+type: R
+description: >-
+  More about what it does (maybe more than one line) Use four spaces when
+  indenting paragraphs within the Description.
+analyses:
+  - name: adjusting
+    ns: scalmj
+    menuGroup: Scores & Norms
+    description: |
+      Something here
+    title: Scores Adjustment
+    menuTitle: Scores Adjustment
+    category: analyses
+usesNative: true
+minApp: 1.0.8
+
+...
