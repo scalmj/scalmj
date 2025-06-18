@@ -1,0 +1,9 @@
+*.jmo
+*.Rproj
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+local/
+localData/
+build/

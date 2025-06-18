@@ -1,0 +1,245 @@
+name: adjusting
+title: Scores Adjustment
+menuGroup: Scores & Norms
+version: 0.0.3
+jas: '1.2'
+export: true
+completeWhenFilled: false
+description:
+    main: |
+        Something here
+    R:
+        dontrun: true
+        usage: |
+            some code here
+options:
+    -   name: data
+        type: Data
+        description:
+            R: the data as a data frame
+            
+    -   name: dep
+        title: Raw Score
+        type: Variable
+        default: ~
+        suggested:
+            - continuous
+            - ordinal
+        permitted: 
+            - numeric
+        description:
+            R: |
+                Update this when R package is to be dealt with
+    -   name: factors
+        title: Dichotomous Pretictors
+        type: Variables
+        suggested: 
+          - nominal
+        permitted: 
+          - factor
+        description:
+            R: |
+                Update this when R package is to be dealt with
+    -   name: covs
+        title: Continuous Pretictors
+        type: Variables
+        default: ~
+        suggested:
+            - continuous
+            - ordinal
+        permitted: 
+            - numeric
+        description:
+            R: |
+                Update this when R package is to be dealt with
+
+    -   name: model_type
+        title: Statistical Model
+        type: List
+        default: lm
+        options:
+            -   name: lm
+                title: Regression
+            -   name:  nb
+                title: Negative Binomial
+            -   name:  pois
+                title: Poisson 
+            -   name:  beta
+                title: Beta regression
+
+
+    -   name: covsTransformations
+        title: Transformations
+        type: NMXList
+        options:
+            -   name: lin
+                title: Linear
+            -   name: ln
+                title: Natural Logarithm
+            -   name: log10
+                title: Base 10 Log
+            -   name: log100
+                title: Log(100-x)
+            -   name: rec
+                title: Reciprocal (1/y)
+            -   name: sqrt
+                title: Square root
+            -   name: quad
+                title: Quadratic
+            -   name: cub
+                title: Cubic
+
+        default:
+            - lin
+            - ln
+            - log100
+            - rec
+        description:
+            R: |
+                Update this when R package is to be dealt with
+
+    -   name: select
+        title: Select best 
+        type: Bool
+        default: true
+        
+    -   name: method
+        title: Selection method
+        type: List
+        options:
+            -   name: significant
+                title: Keep significant
+            -   name: step
+                title: Stepwise
+        default: step
+        description:
+            R: Update this when R package is to be dealt with
+
+    -   name: direction
+        title: Most problematic scores
+        type: List
+        default: high
+        options:
+            -   name: low
+                title: Lowest
+            -   name: high
+                title: Highest
+
+
+    -   name: forced
+        type: Array
+        items: (covs)
+        default: ~
+        template:
+            type: Group
+            elements:
+                -   name: var
+                    type: Variable
+                    content: $key
+                -   name: type
+                    type: List
+                    options:
+                        - name: auto
+                          title: Auto
+                        - name: lin
+                          title: None (linear)
+                        - name: ln
+                          title: Ln (natural)
+                        - name: log10
+                          title: Log (base 10)
+                        - name: log100
+                          title: Ln(100-x)
+                        - name: sqrt
+                          title: Square root
+                        - name: rec
+                          title: Reciprocal (1/y)
+                        - name:  quad
+                          title: Quadratic
+                        - name:  cub
+                          title: Cubic
+                    default: auto
+        description:
+            R: |
+                a named vector of the form `c(var1="type", var2="type2")` 
+    -   name:  included
+        type: Variables
+        default: ~
+    -   name: es_zscore
+        title: z-score  
+        type: Bool
+        default: true
+    -   name: es_rank
+        title: Rank-based 
+        type: Bool
+        default: false
+        
+    -   name: perc
+        title: percentile 
+        type: Bool
+        default: true
+    -   name: perc_type
+        type: List
+        default: eby5
+        options:
+            -   name: eby5
+                title: Extremes and by 5
+            -   name: eby10
+                title: Extremes and by 10
+            -   name:  by10
+                title: by 10
+            -   name:  by5
+                title: by 5
+            -   name:  all
+                title: All
+
+    -   name: score_adjust
+        title: Adjusted 
+        type: Bool
+        default: false
+    -   name: score_raw
+        title: Raw 
+        type: Bool
+        default: false
+    -   name: score_preds
+        title: Predictors 
+        type: Bool
+        default: false
+
+    -   name: score_sort
+        title: Sort by Adjusted
+        type: List
+        default: none
+        options:
+            -   name: none
+                title: Data
+            -   name: inc
+                title: Increasing
+            -   name: dec
+                title: Decreasing
+
+    -   name: plots
+        type: NMXList
+        default: []
+        options:
+             - name: adj
+               title: Adj. Score histogram
+             - name: adj_obs
+               title: Adj. Score - Observed
+             - name: adj_pred
+               title: Adj. Score - Predictors
+             
+    -   name: plot_es
+        title: With Equivalent scores 
+        type: Bool
+        default: false
+             
+
+
+    -   name: .caller
+        type: String
+        default: adjusting
+        hidden: true
+    -   name: .interface
+        type: String
+        default: jamovi
+        hidden: true

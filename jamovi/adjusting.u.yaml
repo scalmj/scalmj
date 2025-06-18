@@ -1,0 +1,269 @@
+name: adjusting
+title: Scores Adjustment
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Raw Score
+        children:
+          - type: VariablesListBox
+            name: dep
+            maxItemCount: 1
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Continuous Pretictors
+        children:
+          - type: VariablesListBox
+            name: covs
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Dichotomous Pretictors
+        children:
+          - type: VariablesListBox
+            name: factors
+            isTarget: true
+  - type: CollapseBox
+    label: Model selection
+    name: model_selection_panel
+    collapsed: true
+    stretchFactor: 1
+    style: list
+    children:
+      - type: LayoutBox
+        name: model_selection_fist
+        style: inline
+        children:
+          - type: Label
+            label: Statistical model
+            children:
+              - type: RadioButton
+                name: model_type_lm
+                optionName: model_type
+                optionPart: lm
+              - type: RadioButton
+                name: model_type_nb
+                optionName: model_type
+                optionPart: nb
+              - type: RadioButton
+                name: model_type_pois
+                optionName: model_type
+                optionPart: pois
+              - type: RadioButton
+                name: model_type_beta
+                optionName: model_type
+                optionPart: beta
+          - type: Label
+            label: Transformations
+            name: covsTransformations
+            children:
+              - type: CheckBox
+                name: select
+              - type: Label
+                label: Among
+                children:
+                  - name: covsTransformations_lin
+                    type: CheckBox
+                    optionName: covsTransformations
+                    optionPart: lin
+                    enable: (select)
+                  - name: covsTransformations_ln
+                    type: CheckBox
+                    optionName: covsTransformations
+                    optionPart: ln
+                    enable: (select)
+                  - name: covsTransformations_rec
+                    type: CheckBox
+                    optionName: covsTransformations
+                    optionPart: rec
+                    enable: (select)
+                  - name: covsTransformations_log100
+                    type: CheckBox
+                    optionName: covsTransformations
+                    optionPart: log100
+                    enable: (select)
+                  - name: covsTransformations_log10
+                    type: CheckBox
+                    optionName: covsTransformations
+                    optionPart: log10
+                    enable: (select)
+                  - name: covsTransformations_sqrt
+                    type: CheckBox
+                    optionName: covsTransformations
+                    optionPart: sqrt
+                    enable: (select)
+                  - name: covsTransformations_quad
+                    type: CheckBox
+                    optionName: covsTransformations
+                    optionPart: quad
+                    enable: (select)
+                  - name: covsTransformations_cub
+                    type: CheckBox
+                    optionName: covsTransformations
+                    optionPart: cub
+                    enable: (select)
+          - type: LayoutBox
+            name: model_selection_second
+            style: list
+            children:
+              - type: Label
+                label: Terms Selection
+                children:
+                  - type: RadioButton
+                    name: method_step
+                    optionName: method
+                    optionPart: step
+              - type: Label
+                label: Scores direction (worse score)
+                children:
+                  - type: RadioButton
+                    name: dir_high
+                    optionName: direction
+                    optionPart: high
+                  - type: RadioButton
+                    name: dir_low
+                    optionName: direction
+                    optionPart: low
+          - type: LayoutBox
+            margin: large
+            children:
+              - name: method_significant
+                type: RadioButton
+                optionName: method
+                optionPart: significant
+  - name: panel_transforms
+    type: CollapseBox
+    label: Terms refinements
+    collapsed: true
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        style: list
+        stretchFactor: 1
+        children:
+          - type: Label
+            label: Force transformations
+          - type: ListBox
+            name: forced
+            stretchFactor: 1
+            showColumnHeaders: false
+            columns:
+              - name: var
+                label: null
+                selectable: false
+                stretchFactor: 1
+                maxWidth: 300
+                template:
+                  type: VariableLabel
+              - name: type
+                label: null
+                selectable: false
+                stretchFactor: 0.5
+                template:
+                  type: ComboBox
+      - type: Supplier
+        name: includedSupplier
+        label: Force inclusion
+        persistentItems: false
+        stretchFactor: 1
+        format: VariableLabel
+        children:
+          - type: TargetLayoutBox
+            label: Inclusion forced
+            children:
+              - type: ListBox
+                name: included
+                isTarget: true
+                valueFilter: unique
+                template:
+                  type: VariableLabel
+  - name: panel_output
+    type: CollapseBox
+    label: Output
+    collapsed: true
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        style: inline
+        stretchFactor: 1
+        children:
+          - type: Label
+            label: Equivalent score
+            children:
+              - name: es_zscore
+                type: CheckBox
+
+              - name: es_rank
+                type: CheckBox
+          - type: Label
+            label: percentile
+            children:
+              - name: perc
+                type: CheckBox
+              - type: ComboBox
+                name: perc_type
+          - type: LayoutBox
+            style: list
+            stretchFactor: 1
+            children:
+              - type: Label
+                label: Data table
+                children:
+                  - type: CheckBox
+                    name: score_adjust
+                  - type: CheckBox
+                    name: score_raw
+                    enable: (score_adjust)
+                  - type: CheckBox
+                    name: score_preds
+                    enable: (score_adjust)
+              - type: Label
+                label: Data sort
+                children:
+                  - type: RadioButton
+                    name: sort_none
+                    optionName: score_sort
+                    optionPart: none
+                  - type: RadioButton
+                    name: sort_inc
+                    optionName: score_sort
+                    optionPart: inc
+                  - type: RadioButton
+                    name: sort_dec
+                    optionName: score_sort
+                    optionPart: dec
+ 
+  - name: panel_plot
+    type: CollapseBox
+    label: Plots
+    collapsed: true
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        style: inline
+        stretchFactor: 1
+        children:
+          - type: Label
+            label: Adjusted Scores
+            children:
+                  - name: plots_adj
+                    type: CheckBox
+                    optionPart: adj
+                    optionName: plots
+                  - name: plots_adj_obs
+                    type: CheckBox
+                    optionPart: adj_obs
+                    optionName: plots
+                  - name: plots_adj_preds
+                    type: CheckBox
+                    optionPart: adj_pred
+                    optionName: plots
+          - type: Label
+            label: Options
+            children:
+                  - name: plot_es
+                    type: CheckBox
