@@ -37,6 +37,7 @@ Initer <- R6::R6Class(
           ## set the selector clss as the selector
           self$selector<-Selector$new(private$.checkdata())
           ## general stuff
+          self$selector$options<- self$options
           self$selector$model_fun<- MODEL_TYPE[[self$options$model_type]]$fun
           self$selector$opts <- MODEL_TYPE[[self$options$model_type]]$opts
           self$selector$transformations<-self$options$covsTransformations

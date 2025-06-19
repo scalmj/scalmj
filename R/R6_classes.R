@@ -173,8 +173,9 @@ Adjuster <- R6::R6Class("Adjuster",
 
 
 Selector <- R6::R6Class("Selector",
-                    
+              
   public = list(
+    options    = NULL,
     model      = NULL,
     model_type = NULL,
     dep        = NULL,
@@ -265,34 +266,52 @@ Selector <- R6::R6Class("Selector",
       opts[["data"]]<-private$.data
    
       model<-do.call(self$model_fun,opts)
-      
       model<-fix_call(model)
-      scope<-list(lower=~1, upper=form)
-      if (is.something(self$included)) {
-        included<-self$best_transf[self$included]
-        included<-unlist(lapply(included,function(x) x$var))
-        scope<-list(lower=as.formula(jmvcore::composeFormula(NULL,included)), upper=form)
-      }
+                      
+      ## here the selection methods start
+      
+      switch(self$options$method, 
+             "step" = {
+                    scope<-list(lower=~1, upper=form)
+                    if (is.something(self$included)) {
+                          included<-self$best_transf[self$included]
+                          included<-unlist(lapply(included,function(x) x$var))
+                          scope<-list(lower=as.formula(jmvcore::composeFormula(NULL,included)), upper=form)
+                          }
+                         steps<-MASS::stepAIC(model,direction="both",trace=0, scope=scope)
+                         self$model<-steps
+                         if (length(self$model$coefficients)==1)
+                                       return()
+                         res<-as.data.frame(summary(steps)$coefficients)[-1,]
+                         names(res)<-c("estimate","se","test","p")
+                         res$df<-stats::df.residual(steps)
+             },
+             "sig"= {
+               
+                res<-as.data.frame(summary(model)$coefficients)[-1,]
+                names(res)<-c("estimate","se","test","p")
+                res <- res[res$p < (.05/nrow(res)),]
+                if (nrow(res)==0) return()
+                vars<-rownames(res)
+                form<-jmvcore::composeFormula(self$dep,vars)
+                opts[["formula"]]<-form
+                self$model<-do.call(self$model_fun,opts)
+                res<-as.data.frame(summary(self$model)$coefficients)[-1,]
+                names(res)<-c("estimate","se","test","p")
+                res$df<-stats::df.residual(self$model)
+             })
+      
+        res$rowname<-rownames(res)
 
-      steps<-MASS::stepAIC(model,direction="both",trace=0, scope=scope)
-      self$model<-steps
-      if (length(self$model$coefficients)==1)
-         return()
-      res<-as.data.frame(summary(steps)$coefficients)[-1,]
-      names(res)<-c("estimate","se","test","p")
-      res$df<-stats::df.residual(steps)
-      res$rowname<-rownames(res)
-
-      res$name<-NA
-      res$fun<-NA
-      for (var in self$best_transf) {
-        res$name[res$rowname==var$var]<-var$name
-        res$fun[res$rowname==var$var]<-TRANSFUN[[var$id]]$name
-        if (any(res$rowname==var$var)) self$selected[[var$name]]<-var
-      }
-      self$stepwise<-res
- 
-      return(res)
+        res$name<-NA
+        res$fun<-NA
+        for (var in self$best_transf) {
+           res$name[res$rowname==var$var]<-var$name
+           res$fun[res$rowname==var$var]<-TRANSFUN[[var$id]]$name
+           if (any(res$rowname==var$var)) self$selected[[var$name]]<-var
+           }
+        return(res)
+      
 
     },
     
