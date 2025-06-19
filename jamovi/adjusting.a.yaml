@@ -107,7 +107,7 @@ options:
         title: Selection method
         type: List
         options:
-            -   name: significant
+            -   name: sig
                 title: Keep significant
             -   name: step
                 title: Stepwise

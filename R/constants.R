@@ -22,4 +22,4 @@ MODEL_TYPE[["pois"]]<-list(id="pois",name="Poisson",fun=stats::glm,opts=list(fam
 METHOD_LABEL<-list()
 METHOD_LABEL[["user"]]<-"User"
 METHOD_LABEL[["step"]]<-"Step-wise"
-METHOD_LABEL[["significant"]]<-"Significance"
+METHOD_LABEL[["sig"]]<-"Significance"
