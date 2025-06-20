@@ -28,4 +28,13 @@
         `volume`=43, 
         `number`=2, 
         `pages`="961-966", 
-        `publisher`="Neurological Sciences"))
+        `publisher`="Neurological Sciences"), 
+    `capitani`=list(
+        `type`="article", 
+        `title`="Outer and inner tolerance limits: their usefulness for the construction of norms and the standardization of neuropsychological tests", 
+        `author`="Capitani, E. and Laiacona, M.", 
+        `year`=2017, 
+        `volume`=31, 
+        `number`="6-7", 
+        `pages`="1219-1230", 
+        `publisher`="The Clinical Neuropsychologist"))

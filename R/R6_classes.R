@@ -185,6 +185,7 @@ Selector <- R6::R6Class("Selector",
     selected   = list(),
     included   = NULL,
     stepwise    = NULL,
+    tab_comb_details=NULL,
     initialize = function(data=NULL) {
       self$data <- data
       self$model_fun<-lm
@@ -248,7 +249,6 @@ Selector <- R6::R6Class("Selector",
       if (is.null(self$dep)) stop("The outcome variable  must be defined")
       if (is.null(self$best_transf)) stop("The covariates variable  must be selected")
       vars<-lapply(self$best_transf,function(x) x$var)
-    mark(vars)
       form<-jmvcore::composeFormula(self$dep,vars)
       opts<-c(self$opts,list(formula=form,data=private$.data))
       self$model<-do.call(self$model_fun,opts)
@@ -522,6 +522,22 @@ Selector <- R6::R6Class("Selector",
         all_AIC[[i]]<-stats::AIC(model)
         all_models[[i]]<-model
       }
+      ### save the details
+      tr_id<-lapply(self$covs,function(x) lapply(x$transformations, function(z) z$id))
+      details<-expand.grid(tr_id)
+      details[] <- lapply(details, unlist)
+      if  (length(facts)>0)
+          for (f in facts) details[[f]]<-"None"
+      details$aic<-NA
+      for (i in seq_len(nrow(details))) {
+        details$aic[i]<-all_AIC[[i]]
+        details$r2[i]<-performance::r2(all_models[[i]])[[1]]
+      }
+      details<-details[order(details$aic),]
+      details$name<-seq_len(nrow(details))
+      self$tab_comb_details<-details
+     
+      #####
       best_i<-which.min(all_AIC)
       if (length(best_i)>1) best_i<-best_i[1]
       model<-all_models[[best_i]]

@@ -21,6 +21,16 @@ adjustingClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 ### info table ###
                 aSmartObj <- SmartTable$new(self$results$varstab, private$.runner)
                 ladd(private$.smartObjs) <- aSmartObj
+                ### final table ###
+                aSmartObj <- SmartTable$new(self$results$final, private$.runner)
+                aSmartObj$hideOn <- list(df = NA)
+                ladd(private$.smartObjs) <- aSmartObj
+                ### comb_details table ###
+                aSmartObj <- SmartTable$new(self$results$comb_details, private$.runner)
+                aSmartObj$expandOnRun<-T
+                aSmartObj$expandFrom<-2
+                ladd(private$.smartObjs) <- aSmartObj
+
                 ### univariate table ###
                 aSmartObj <- SmartTable$new(self$results$univariate, private$.runner)
                 aSmartObj$spaceBy <-"name"
@@ -32,10 +42,6 @@ adjustingClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 aSmartObj <- SmartTable$new(self$results$multiple, private$.runner)
                 ladd(private$.smartObjs) <- aSmartObj
                 aSmartObj$hideOn <- list(df = NA)
-                ### final table ###
-                aSmartObj <- SmartTable$new(self$results$final, private$.runner)
-                aSmartObj$hideOn <- list(df = NA)
-                ladd(private$.smartObjs) <- aSmartObj
 
                 ### scores_es table ###
                 aSmartObj <- SmartTable$new(self$results$scores$es, private$.runner)
