@@ -125,7 +125,9 @@ children:
                     name: method_perm
                     optionName: method
                     optionPart: comb
-
+                    children:
+                       - name: comb_details
+                         type: CheckBox
               - type: Label
                 label: Scores direction (worse score)
                 children:
@@ -198,7 +200,6 @@ children:
             children:
               - name: es_zscore
                 type: CheckBox
-
               - name: es_rank
                 type: CheckBox
           - type: Label

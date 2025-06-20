@@ -70,7 +70,12 @@ Runner <- R6::R6Class("Runner",
          
           res
         },
-        
+        run_comb_details= function() {
+          
+          tab<-self$selector$tab_comb_details
+          mark(str(tab))
+          tab
+        },
         run_scores_percentiles = function() {
           
           perc<-self$adjuster$percentiles()

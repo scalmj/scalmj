@@ -84,7 +84,6 @@ Initer <- R6::R6Class(
         init_varstab= function() {
           
           c(self$selector$covs_info,self$selector$factors)
-
           
           },
         init_univariate= function() {
@@ -92,7 +91,6 @@ Initer <- R6::R6Class(
            self$selector$univariate()
 
         },
-
         init_multiple= function() {
   
           c(self$selector$covs_info,self$selector$factors)
@@ -104,8 +102,7 @@ Initer <- R6::R6Class(
           if (self$options$es_zscore) ladd(tab)<-list("method"="z-scores")
           if (self$options$es_rank)   ladd(tab)<-list("method"="Percentiles")
           return(tab)
-
-
+          
         },
         
         init_scores_percentiles= function() {

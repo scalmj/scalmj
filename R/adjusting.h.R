@@ -17,6 +17,7 @@ adjustingOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "rec"),
             select = TRUE,
             method = "step",
+            comb_details = FALSE,
             direction = "high",
             forced = NULL,
             included = NULL,
@@ -102,6 +103,10 @@ adjustingOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "step",
                     "comb"),
                 default="step")
+            private$..comb_details <- jmvcore::OptionBool$new(
+                "comb_details",
+                comb_details,
+                default=FALSE)
             private$..direction <- jmvcore::OptionList$new(
                 "direction",
                 direction,
@@ -212,6 +217,7 @@ adjustingOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..covsTransformations)
             self$.addOption(private$..select)
             self$.addOption(private$..method)
+            self$.addOption(private$..comb_details)
             self$.addOption(private$..direction)
             self$.addOption(private$..forced)
             self$.addOption(private$..included)
@@ -236,6 +242,7 @@ adjustingOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         covsTransformations = function() private$..covsTransformations$value,
         select = function() private$..select$value,
         method = function() private$..method$value,
+        comb_details = function() private$..comb_details$value,
         direction = function() private$..direction$value,
         forced = function() private$..forced$value,
         included = function() private$..included$value,
@@ -259,6 +266,7 @@ adjustingOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..covsTransformations = NA,
         ..select = NA,
         ..method = NA,
+        ..comb_details = NA,
         ..direction = NA,
         ..forced = NA,
         ..included = NA,
@@ -285,6 +293,7 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         issues = function() private$.items[["issues"]],
         varstab = function() private$.items[["varstab"]],
         final = function() private$.items[["final"]],
+        comb_details = function() private$.items[["comb_details"]],
         univariate = function() private$.items[["univariate"]],
         multiple = function() private$.items[["multiple"]],
         plots = function() private$.items[["plots"]],
@@ -375,6 +384,26 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `title`="p", 
                         `type`="number", 
                         `format`="zto,pvalue"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="comb_details",
+                title="Transformations combinations details",
+                visible="(comb_details)",
+                refs=list(
+                    "arcara"),
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `type`="text", 
+                        `title`="Model"),
+                    list(
+                        `name`="aic", 
+                        `type`="number", 
+                        `title`="AIC"),
+                    list(
+                        `name`="r2", 
+                        `type`="number", 
+                        `title`="R\u00B2"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="univariate",
@@ -517,7 +546,8 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                             title="Equivalent Scores",
                             refs=list(
                                 "facchin",
-                                "aiello"),
+                                "aiello",
+                                "capitani"),
                             columns=list(
                                 list(
                                     `name`="method", 
@@ -548,7 +578,7 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                     `title`="oTL", 
                                     `type`="number"),
                                 list(
-                                    `name`="itl", 
+                                    `name`="itlcccdf", 
                                     `title`="iTL", 
                                     `type`="number"))))
                         self$add(jmvcore::Table$new(
@@ -622,6 +652,7 @@ adjustingBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covsTransformations Update this when R package is to be dealt with
 #' @param select .
 #' @param method Update this when R package is to be dealt with
+#' @param comb_details .
 #' @param direction .
 #' @param forced a named vector of the form \code{c(var1="type",
 #'   var2="type2")}
@@ -645,6 +676,7 @@ adjustingBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$issues} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$varstab} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$final} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$comb_details} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$univariate} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$multiple} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plots$adj} \tab \tab \tab \tab \tab an image \cr
@@ -677,6 +709,7 @@ adjusting <- function(
                 "rec"),
     select = TRUE,
     method = "step",
+    comb_details = FALSE,
     direction = "high",
     forced = NULL,
     included = NULL,
@@ -718,6 +751,7 @@ adjusting <- function(
         covsTransformations = covsTransformations,
         select = select,
         method = method,
+        comb_details = comb_details,
         direction = direction,
         forced = forced,
         included = included,

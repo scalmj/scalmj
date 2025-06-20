@@ -15,19 +15,22 @@ es_percentiles <- function(x,worse) UseMethod(".es_perc")
    #Find the position of OTL
     values<-numeric(4)
     values[1] <- which.min(abs(x - OTL))
-
     #Position of Median
     values[4] <- ceiling((length(x)+1)/2)
 
     #Range
+
     step <- floor((values[4] - values[1])/3) 
     values[2] <- values[1]+step
     values[3] <- values[1]+2*step
-    
+    obj<-try_hard({
+
     covalues<-sort(x,decreasing = F)[values]
     values<-c(covalues,ITL,OTL)
     names(values)<-c("es0","es1","es2","es3","itl","otl")
     values$method<-"Percentiles"
+    
+    })    
     return(values)
     
    

@@ -67,6 +67,22 @@ items:
                 title: p
                 type: number
                 format: zto,pvalue
+    -   name:  comb_details
+        title: Transformations combinations details
+        type: Table
+        visible: (comb_details)
+        refs:
+            - arcara
+        columns:
+            -   name: name
+                type: text
+                title: Model
+            -   name: aic
+                type: number
+                title: AIC
+            -   name: r2
+                type: number
+                title: R²
 
     -   name: univariate
         title: Univariate effects
@@ -177,6 +193,7 @@ items:
               refs:
                   - facchin
                   - aiello
+                  - capitani
               columns:
                      - name: method
                        title: Method
@@ -199,7 +216,7 @@ items:
                      - name: otl
                        title: oTL
                        type: number
-                     - name: itl
+                     - name: itlcccdf
                        title: iTL
                        type: number
 
