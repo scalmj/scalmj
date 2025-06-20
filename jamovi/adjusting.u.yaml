@@ -121,6 +121,10 @@ children:
                     name: method_sig
                     optionName: method
                     optionPart: sig
+                  - type: RadioButton
+                    name: method_perm
+                    optionName: method
+                    optionPart: comb
 
               - type: Label
                 label: Scores direction (worse score)

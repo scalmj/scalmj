@@ -23,3 +23,4 @@ METHOD_LABEL<-list()
 METHOD_LABEL[["user"]]<-"User"
 METHOD_LABEL[["step"]]<-"Step-wise"
 METHOD_LABEL[["sig"]]<-"Significance"
+METHOD_LABEL[["comb"]]<-"Combinations"

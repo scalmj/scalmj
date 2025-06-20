@@ -99,7 +99,8 @@ adjustingOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 method,
                 options=list(
                     "sig",
-                    "step"),
+                    "step",
+                    "comb"),
                 default="step")
             private$..direction <- jmvcore::OptionList$new(
                 "direction",

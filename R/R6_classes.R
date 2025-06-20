@@ -193,18 +193,18 @@ Selector <- R6::R6Class("Selector",
     univariate = function() { 
       
          df<-data.frame(name=NA,fun=NA,id=NA,type=NA)
-         tabname<-lapply(self$
-                           
-                           covs,function(x) lapply(x$transformations, function(z) z$name))
+         tabname<-lapply(self$covs,function(x) lapply(x$transformations, function(z) z$name))
          tabid<-lapply(self$covs,function(x) lapply(x$transformations, function(z) z$id))
        
          cols<-names(tabname)
+         x<-0
          for (i in seq_along(tabname)) {
            for (j in seq_along(unique(tabname[[i]]))) {
-                   x<-j+i-1
+                   x<-x+1
                    df[x,]<-c(cols[i],tabname[[i]][j],tabid[[i]][j],"covariate")
            }
          }
+    
          for (f in self$factors) {
            x<-x+1
            df[x,]<-c(f$name,fun="None",id="none",type="factor")
@@ -248,7 +248,7 @@ Selector <- R6::R6Class("Selector",
       if (is.null(self$dep)) stop("The outcome variable  must be defined")
       if (is.null(self$best_transf)) stop("The covariates variable  must be selected")
       vars<-lapply(self$best_transf,function(x) x$var)
-    
+    mark(vars)
       form<-jmvcore::composeFormula(self$dep,vars)
       opts<-c(self$opts,list(formula=form,data=private$.data))
       self$model<-do.call(self$model_fun,opts)
@@ -259,57 +259,18 @@ Selector <- R6::R6Class("Selector",
     },
     select = function() {    
       
-      vars<-lapply(self$best_transf,function(x) x$var)
-      form<-as.formula(jmvcore::composeFormula(self$dep,vars))
-      opts<-self$opts
-      opts[["formula"]]<-form
-      opts[["data"]]<-private$.data
-   
-      model<-do.call(self$model_fun,opts)
-      model<-fix_call(model)
                       
       ## here the selection methods start
+      res<-NULL
+      res<-switch(self$options$method, 
+             "step" = private$.select_stepwise(),
+             "sig"=   private$.select_sig(),
+             "comb"=  private$.select_comb()
+             )
       
-      switch(self$options$method, 
-             "step" = {
-                    scope<-list(lower=~1, upper=form)
-                    if (is.something(self$included)) {
-                          included<-self$best_transf[self$included]
-                          included<-unlist(lapply(included,function(x) x$var))
-                          scope<-list(lower=as.formula(jmvcore::composeFormula(NULL,included)), upper=form)
-                          }
-                         steps<-MASS::stepAIC(model,direction="both",trace=0, scope=scope)
-                         self$model<-steps
-                         if (length(self$model$coefficients)==1)
-                                       return()
-                         res<-as.data.frame(summary(steps)$coefficients)[-1,]
-                         names(res)<-c("estimate","se","test","p")
-                         res$df<-stats::df.residual(steps)
-             },
-             "sig"= {
-               
-                res<-as.data.frame(summary(model)$coefficients)[-1,]
-                names(res)<-c("estimate","se","test","p")
-                res <- res[res$p < (.05/nrow(res)),]
-                if (nrow(res)==0) return()
-                vars<-rownames(res)
-                form<-jmvcore::composeFormula(self$dep,vars)
-                opts[["formula"]]<-form
-                self$model<-do.call(self$model_fun,opts)
-                res<-as.data.frame(summary(self$model)$coefficients)[-1,]
-                names(res)<-c("estimate","se","test","p")
-                res$df<-stats::df.residual(self$model)
-             })
+        if (is.null(res) || nrow(res)==0)
+          return()
       
-        res$rowname<-rownames(res)
-
-        res$name<-NA
-        res$fun<-NA
-        for (var in self$best_transf) {
-           res$name[res$rowname==var$var]<-var$name
-           res$fun[res$rowname==var$var]<-TRANSFUN[[var$id]]$name
-           if (any(res$rowname==var$var)) self$selected[[var$name]]<-var
-           }
         return(res)
       
 
@@ -364,7 +325,7 @@ Selector <- R6::R6Class("Selector",
 #        lapply(alist,function(x) private$.covs[[x$name]]$mean<-mean(self$data[[x$name]],na.rm=T) )
         names(private$.covs)<-sapply(alist,function(x) x$name )      
         self$included<-c(self$included,unlist(lapply(alist, function(x) if (hasName(x,"include") && x$include==TRUE) x$name else NULL)))
-        jinfo("Covariates set")
+      
       }
       },
     covs_info=function(alist) {
@@ -445,7 +406,7 @@ Selector <- R6::R6Class("Selector",
     .maketerms = function(df) {
       
       private$.data<-self$data
-      
+    
       for (i in seq_len(nrow(df))) {
           row<-df[i,]
           fun<-TRANSFUN[[row$id]]$fun
@@ -476,6 +437,130 @@ Selector <- R6::R6Class("Selector",
       tab<-coefficients_table(model)
       return(tab)
 
+    },
+    .select_stepwise= function() {
+      
+      vars<-lapply(self$best_transf,function(x) x$var)
+      form<-as.formula(jmvcore::composeFormula(self$dep,vars))
+      opts<-self$opts
+      opts[["formula"]]<-form
+      opts[["data"]]<-private$.data
+      model<-do.call(self$model_fun,opts)
+      model<-fix_call(model)
+      scope<-list(lower=~1, upper=form)
+      if (is.something(self$included)) {
+                          included<-self$best_transf[self$included]
+                          included<-unlist(lapply(included,function(x) x$var))
+                          scope<-list(lower=as.formula(jmvcore::composeFormula(NULL,included)), upper=form)
+                }
+     steps<-MASS::stepAIC(model,direction="both",trace=0, scope=scope)
+     self$model<-steps
+     if (length(self$model$coefficients)==1)
+               return()
+     res<-as.data.frame(summary(steps)$coefficients)[-1,]
+     names(res)<-c("estimate","se","test","p")
+     res$df<-stats::df.residual(steps)
+     res$rowname<-rownames(res)
+     res$name<-NA
+     res$fun<-NA
+     for (var in self$best_transf) {
+           res$name[res$rowname==var$var]<-var$name
+           res$fun[res$rowname==var$var]<-TRANSFUN[[var$id]]$name
+           if (any(res$rowname==var$var)) self$selected[[var$name]]<-var
+        }
+
+     return(res)
+      
+    },
+    .select_sig=function() {
+ 
+      vars<-lapply(self$best_transf,function(x) x$var)
+      form<-as.formula(jmvcore::composeFormula(self$dep,vars))
+      opts<-self$opts
+      opts[["formula"]]<-form
+      opts[["data"]]<-private$.data
+      model<-do.call(self$model_fun,opts)
+      model<-fix_call(model)
+      res<-as.data.frame(summary(model)$coefficients)[-1,]
+      names(res)<-c("estimate","se","test","p")
+      res <- res[res$p < (.05/nrow(res)),]
+      if (nrow(res)==0) return()
+      vars<-rownames(res)
+      form<-jmvcore::composeFormula(self$dep,vars)
+      opts[["formula"]]<-form
+      self$model<-do.call(self$model_fun,opts)
+      res<-as.data.frame(summary(self$model)$coefficients)[-1,]
+      names(res)<-c("estimate","se","test","p")
+      res$df<-stats::df.residual(self$model)
+     res$rowname<-rownames(res)
+     res$name<-NA
+     res$fun<-NA
+     for (var in self$best_transf) {
+           res$name[res$rowname==var$var]<-var$name
+           res$fun[res$rowname==var$var]<-TRANSFUN[[var$id]]$name
+           if (any(res$rowname==var$var)) self$selected[[var$name]]<-var
+        }
+
+      return(res)
+    },
+    .select_comb= function() {
+
+      tr<-lapply(self$covs,function(x) lapply(x$transformations, function(z) paste0(x$name,"_",z$id)))
+      gtr<-expand.grid(tr)
+      ## deal with factors
+      facts<-list_get(self$factors,"name")
+      facts_t<-NULL
+      if  (length(facts)>0) facts_t<-paste0(facts,"_none")
+      ##
+      all_AIC=list()
+      all_models<-list()
+      for (i in seq_len(nrow(gtr))) {
+        vars<-c(unlist(gtr[i,]),facts_t)
+        form<-jmvcore::composeFormula(self$dep,vars)
+        opts<-c(self$opts,list(formula=form,data=private$.data))
+        model<-do.call(self$model_fun,opts)
+        all_AIC[[i]]<-stats::AIC(model)
+        all_models[[i]]<-model
+      }
+      best_i<-which.min(all_AIC)
+      if (length(best_i)>1) best_i<-best_i[1]
+      model<-all_models[[best_i]]
+      steps<-MASS::stepAIC(model,direction="both",trace=0)
+      self$model<-steps
+      if (length(self$model$coefficients)==1)
+               return()
+      res<-as.data.frame(summary(self$model)$coefficients)[-1,]
+      names(res)<-c("estimate","se","test","p")
+      res$df<-stats::df.residual(self$model)
+      res$rowname<-rownames(res)
+
+      ## this is for labeling
+      labs<-list()
+      for (x in self$covs) {
+             for (z in x$transformations) {
+               var<-paste0(x$name,"_",z$id)
+               labs[[var]]<-list(name=x$name,id=z$id, var=var,type="Covariate")
+                 }
+      }
+      for (f in facts) {
+               var <- paste0(f,"_none")
+               labs[[var]]<-list(name=f,id="none", var=var,type="Factor")
+      }
+ 
+      res$name<-NA
+      res$fun<-NA
+
+     for (var in labs) {
+           res$name[res$rowname==var$var]<-var$name
+           res$fun[res$rowname==var$var]<-TRANSFUN[[var$id]]$name
+           if (any(res$rowname==var$var)) {
+                             self$selected[[var$name]]<-var
+                             self$best_transf[[var$name]]<-var
+           }
+        }
+
+      return(res)
+      
     }
 
   )
