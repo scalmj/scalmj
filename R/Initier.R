@@ -60,6 +60,7 @@ Initer <- R6::R6Class(
              method=METHOD_LABEL[[method]]
              list(name=x,type="Covariate",forced=TRANSFUN[[trans]]$id,transf=TRANSFUN[[trans]]$name,include=inc,method=method)}
              )
+         
           factors<-lapply(self$options$factors,function(x) {
             
                     method<-self$options$method

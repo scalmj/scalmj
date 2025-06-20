@@ -99,7 +99,8 @@ adjustingOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 method,
                 options=list(
                     "sig",
-                    "step"),
+                    "step",
+                    "comb"),
                 default="step")
             private$..direction <- jmvcore::OptionList$new(
                 "direction",
@@ -342,6 +343,8 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="final",
                 title="Final model",
+                refs=list(
+                    "arcara"),
                 columns=list(
                     list(
                         `name`="name", 
@@ -512,6 +515,9 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                             options=options,
                             name="es",
                             title="Equivalent Scores",
+                            refs=list(
+                                "facchin",
+                                "aiello"),
                             columns=list(
                                 list(
                                     `name`="method", 

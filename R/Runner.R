@@ -22,8 +22,8 @@ Runner <- R6::R6Class("Runner",
 
             self$univariate_tab<-self$selector$univariate()
             self$selector$find_best()
-            self$multiple_tab<-self$selector$multiple()
             self$final_tab<-self$selector$select()
+            self$multiple_tab<-self$selector$multiple()
             if (is.null(self$final_tab)) {
               self$final_tab<-list(list(name="No predictors", fun="Original score"))
             }
