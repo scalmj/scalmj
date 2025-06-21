@@ -128,6 +128,7 @@ children:
                     children:
                        - name: comb_details
                          type: CheckBox
+                         enable: (method:comb)
               - type: Label
                 label: Scores direction (worse score)
                 children:
