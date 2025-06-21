@@ -537,11 +537,20 @@ Selector <- R6::R6Class("Selector",
       details$name<-seq_len(nrow(details))
       self$tab_comb_details<-details
      
-      #####
+      ##### end of details
+      
       best_i<-which.min(all_AIC)
-      if (length(best_i)>1) best_i<-best_i[1]
       model<-all_models[[best_i]]
-      steps<-MASS::stepAIC(model,direction="both",trace=0)
+      scope=NULL
+      if (length(best_i)>1) best_i<-best_i[1]
+      if (is.something(self$included)) {
+                          mark(self$included)
+                        terms<-sapply(self$included,function(x) grep(x,attr(terms(model),"term.labels"),value=T))
+                        scope<-list(lower=as.formula(jmvcore::composeFormula(NULL,terms)), upper=formula(model))
+                }
+
+      
+      steps<-MASS::stepAIC(model,direction="both",trace=0,scope=scope)
       self$model<-steps
       if (length(self$model$coefficients)==1)
                return()

@@ -70,7 +70,7 @@ items:
     -   name:  comb_details
         title: Transformations combinations details
         type: Table
-        visible: (comb_details)
+        visible: (comb_details && method:comb)
         refs:
             - arcara
         columns:
@@ -87,6 +87,7 @@ items:
     -   name: univariate
         title: Univariate effects
         type: Table
+        visible: (method:step || method:sig)
         columns:
             -   name: name
                 type: text

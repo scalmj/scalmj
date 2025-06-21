@@ -388,7 +388,7 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="comb_details",
                 title="Transformations combinations details",
-                visible="(comb_details)",
+                visible="(comb_details && method:comb)",
                 refs=list(
                     "arcara"),
                 columns=list(
@@ -408,6 +408,7 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="univariate",
                 title="Univariate effects",
+                visible="(method:step || method:sig)",
                 columns=list(
                     list(
                         `name`="name", 
