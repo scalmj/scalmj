@@ -33,7 +33,8 @@ Initer <- R6::R6Class(
             }
             
             if (!self$ok) return()
-            
+          si$infotag<-self$options$method  
+          si$info()
           ## set the selector clss as the selector
           self$selector<-Selector$new(private$.checkdata())
           ## general stuff

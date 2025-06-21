@@ -117,10 +117,6 @@ options:
         description:
             R: Update this when R package is to be dealt with
 
-    -   name: comb_details
-        title: Show Selection 
-        type: Bool
-        default: false
 
     -   name: direction
         title: Most problematic scores
