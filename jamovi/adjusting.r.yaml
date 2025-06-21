@@ -70,7 +70,7 @@ items:
     -   name:  comb_details
         title: Transformations combinations details
         type: Table
-        visible: (comb_details && method:comb)
+        visible: (method:comb)
         refs:
             - arcara
         columns:
@@ -217,7 +217,7 @@ items:
                      - name: otl
                        title: oTL
                        type: number
-                     - name: itlcccdf
+                     - name: itl
                        title: iTL
                        type: number
 

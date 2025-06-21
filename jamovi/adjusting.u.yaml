@@ -125,10 +125,6 @@ children:
                     name: method_perm
                     optionName: method
                     optionPart: comb
-                    children:
-                       - name: comb_details
-                         type: CheckBox
-                         enable: (method:comb)
               - type: Label
                 label: Scores direction (worse score)
                 children:

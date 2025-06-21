@@ -1,3 +1,14 @@
+### this class handles the info accordion object that can be 
+### put at the top of the output to display information or give instruction.
+### the idea is handle multiple submodules text that require different text
+### and are handle by the same jmvScaffold classes.
+### the class assumes that you have defined the text in a named list
+### it also assume (but it is not necessary) that jamovi analysis obj has a option
+### named .caller and the results have two Html objects named info and extrainfo.However, these two 
+### may be changed by passing the jamovi output widget to SmartInfo.
+
+
+
 SmartInfo <- R6::R6Class(
     "SmartInfo",
     class = TRUE,
@@ -7,7 +18,6 @@ SmartInfo <- R6::R6Class(
         caller        = NULL,
         infotab       = NULL,
         extrainfotab  = NULL,
-        infotag       = NULL,
         extratag      = NULL,
         infovec       = NULL,
         extravec      = NULL,
@@ -99,16 +109,33 @@ SmartInfo <- R6::R6Class(
     addinfo   <- self$infovec[[self$infotag]]
     addinfo2  <- self$extravec[[self$extratag]]
     help      <-  private$.link_help() 
+    if (is.null(addinfo2)) addinfo2<-" "
+
     txt<-jmvcore::format(text, addinfo = addinfo, addinfo2 = addinfo2, help = help)
     self$infotab$setContent(txt)
     self$infotab$setVisible(TRUE)
     }
     ), ## end of public
-    private= list(
+    active = list(
+        infotag = function(atag) {
+          
+           if (missing(atag))
+              return(private$.infotag)
+           else {
+             if (is.something(self$caller))
+                 private$.infotag<-paste0(self$caller,"_",atag)
+             else
+                 private$.infotag<-atag
+           }
+          
+        }
       
+    ),
+    private= list(
+      .infotag=NULL,
       .link_help = function() {
         
-          text <- NULL
+          text <- ""
           link <- self$linkvec[[self$infotag]]
 
     
@@ -117,8 +144,8 @@ SmartInfo <- R6::R6Class(
                     "<span style=' display:inline-block; text-align: center;" %+%
                     "width:16px; height:16px; border: 3px solid green; border-radius: 50%;padding:3px; padding-bottom:3px; margin-right:8px;" %+%
                     "font-weight: bolder'>" %+%
-                    "i</span><span> Help can be found <a href='" %+% link %+% "' target='_blank'> Pamlj web manual.</a> <span></p>"
-    }
+                    "i</span><span> Help can be found <a href='" %+% link %+% "' target='_blank'> web manual.</a> <span></p>"
+          }
     return(text)
     }
 
