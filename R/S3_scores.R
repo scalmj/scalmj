@@ -67,7 +67,7 @@ es_normal <- function(x,worse="low",conf_level=.95) UseMethod(".es_norm")
     values[4] <- M
     values<-c(values,ITL,OTL)
     names(values)<-c("es0","es1","es2","es3","itl","otl")
-   
+ 
     return(values)
 
 }
@@ -85,6 +85,7 @@ fix_es <- function(cutoffs_df, worse = c("low", "high")) {
 
   for (i in seq_len(n)) {
     x <- cutoffs_df[i, ]
+   
     es0 <- x$es0
     es1 <- x$es1
     es2 <- x$es2
@@ -120,7 +121,7 @@ fix_es <- function(cutoffs_df, worse = c("low", "high")) {
         otl=otl,
         itl=itl
       )
-    
+   
     out[[i]] <- ranges
   }
   

@@ -579,7 +579,7 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                     `title`="oTL", 
                                     `type`="number"),
                                 list(
-                                    `name`="itlcccdf", 
+                                    `name`="itl", 
                                     `title`="iTL", 
                                     `type`="number"))))
                         self$add(jmvcore::Table$new(

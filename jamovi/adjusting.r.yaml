@@ -217,7 +217,7 @@ items:
                      - name: otl
                        title: oTL
                        type: number
-                     - name: itlcccdf
+                     - name: itl
                        title: iTL
                        type: number
 
