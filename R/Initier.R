@@ -27,7 +27,7 @@ Initer <- R6::R6Class(
             }
             if (length(c(self$options$covs,self$options$factors))==0) {
                          self$warning<-list(topic="issues",
-                                      message="Please select at least one covariate or one factor.",
+                                      message="Please select at least one predictor.",
                                       head="info")
               self$ok<-FALSE
             }
@@ -59,7 +59,7 @@ Initer <- R6::R6Class(
              for (f in included) if (f==x) inc<-TRUE
              if (inc) method="user"
              method=METHOD_LABEL[[method]]
-             list(name=x,type="Covariate",forced=TRANSFUN[[trans]]$id,transf=TRANSFUN[[trans]]$name,include=inc,method=method)}
+             list(name=x,type="Continuous",forced=TRANSFUN[[trans]]$id,transf=TRANSFUN[[trans]]$name,include=inc,method=method)}
              )
          
           factors<-lapply(self$options$factors,function(x) {
@@ -69,7 +69,7 @@ Initer <- R6::R6Class(
                     for (f in included) if (f==x) inc<-TRUE
                     if (inc) method="user"
                     method=METHOD_LABEL[[method]]
-                    list(name=x,type="Factor",transf="None",include=inc, method=method)
+                    list(name=x,type="Categorical",transf="None",include=inc, method=method)
           })
           ## fill the selector
           self$selector$dep<-self$options$dep
@@ -101,7 +101,7 @@ Initer <- R6::R6Class(
   
            tab<-list()
           if (self$options$es_zscore) ladd(tab)<-list("method"="z-scores")
-          if (self$options$es_rank)   ladd(tab)<-list("method"="Percentiles")
+          if (self$options$es_rank)   ladd(tab)<-list("method"="Rank-based")
           return(tab)
           
         },
@@ -113,7 +113,8 @@ Initer <- R6::R6Class(
                   eby5 = {data<-data.frame(perc=c(1:5,seq(10,95,5),96:99))},
                   eby10= {data<-data.frame(perc=c(1:5,seq(10,90,10),95:99))},
                   by10= {data<-data.frame(perc=c(1,seq(10,90,10),99))},
-                  by5= {data<-data.frame(perc=c(1,seq(10,90,5),99))}
+                  by5= {data<-data.frame(perc=c(1,seq(10,90,5),99))},
+                  all={data<-data.frame(perc=seq(1, 99, by = 1))}
                   
           )
           self$adjuster$perc_type=data$perc
