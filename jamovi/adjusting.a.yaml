@@ -230,12 +230,14 @@ options:
                title: Adj. Score - Observed
              - name: adj_pred
                title: Adj. Score - Predictors
+             - name: raw_pred
+               title: Raw Score - Predictors
              
     -   name: plot_es
         title: With Equivalent scores 
         type: Bool
         default: false
-             
+
 
 
     -   name: .caller

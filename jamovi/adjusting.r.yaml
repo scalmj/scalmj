@@ -16,7 +16,6 @@ items:
         type: Html
         visible: false
 
-
     -   name: varstab
         title: Variables
         type: Table
@@ -171,6 +170,17 @@ items:
                 title: ''
                 type: Image
                 renderFun: .plot_adj_pred
+                width: 700
+                height: 400
+                
+         -   name: raw_pred
+             title: Raw Scores - Predictors
+             type: Array
+             visible: (plots:raw_pred)
+             template:
+                title: ''
+                type: Image
+                renderFun: .plot_raw_pred
                 width: 700
                 height: 400
      

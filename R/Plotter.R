@@ -27,6 +27,7 @@ Plotter <- R6::R6Class(
           private$.prepare_adjusted()    
           private$.prepare_adj_obs()    
           private$.prepare_adj_pred()    
+          private$.prepare_raw_pred()    
 
         },
         plot_adjusted=function(image, ggtheme, theme) {
@@ -85,7 +86,29 @@ Plotter <- R6::R6Class(
                                              name = "Equivalent Score")  
 
           return(plot)
+        },
+         plot_raw_pred = function(image, ggtheme, theme) {
+          
+          if (is.null(image)) return()
+          df<-image$state$df
+          xname<-image$state$xname
+          yname<-image$state$yname
+          if (utils::hasName(df,"es")) 
+                       plot <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = score, color=es)) 
+          else
+                       plot <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = score)) 
+            
+          # Scatterplot
+          plot <- plot + ggplot2::geom_smooth(ggplot2::aes(x = x, y = score), color = "blue", method = "loess", se = FALSE)
+          plot <- plot +  ggplot2::geom_point(size = 2) 
+          plot <- plot +  ggplot2::xlab(xname) + ggplot2::ylab(yname)
+          plot <- plot +  ggtheme 
+          plot <- plot + ggplot2::scale_color_manual(values =private$.es_colors,
+                                             name = "Equivalent Score")  
+
+          return(plot)
         }
+
     ), ## end of public
     private= list(
       .results=NULL,
@@ -138,7 +161,28 @@ Plotter <- R6::R6Class(
               state<-list(df=df,xname=covs[i])
               aplot$setState(state)
           }
+      },
+      .prepare_raw_pred=function() {
+
+          if (!self$option("plots","raw_pred")) return()
+          if (!self$ok) return()
+        
+
+          es <- self$adjuster$es_default()
+          covs<-list_get(self$runner$selector$selected,"name")
+          if (is.null(covs))
+              self$warning<-list(topic="plots_issues",message="No predictor to plot",head="warning")
+          array<-private$.results$plots$get("raw_pred")
+          for (i in seq_along(covs)) {
+              array$addItem(key = i)
+              aplot<-array$get(key=i)
+              df<-data.frame(score=self$runner$data[[self$options$dep]],x=self$runner$data[,covs[i]])
+              if (self$option("plot_es")) df$es<-es$es
+              state<-list(df=df,xname=covs[i],yname=self$options$dep)
+              aplot$setState(state)
+          }
       }
+      
 
       
       

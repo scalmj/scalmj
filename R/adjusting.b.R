@@ -104,8 +104,13 @@ adjustingClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             plot <- private$.plotter$plot_adj_pred(image, ggtheme, theme)
             return(plot)
           
-        }
+        },
         
+        .plot_raw_pred=function(image, ggtheme, theme, ...) {
+            plot <- private$.plotter$plot_raw_pred(image, ggtheme, theme)
+            return(plot)
+          
+        }
         
 
     )

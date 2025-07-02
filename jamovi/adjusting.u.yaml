@@ -236,7 +236,6 @@ children:
                     name: sort_dec
                     optionName: score_sort
                     optionPart: dec
- 
   - name: panel_plot
     type: CollapseBox
     label: Plots
@@ -250,20 +249,24 @@ children:
           - type: Label
             label: Adjusted Scores
             children:
-                  - name: plots_adj
-                    type: CheckBox
-                    optionPart: adj
-                    optionName: plots
-                  - name: plots_adj_obs
-                    type: CheckBox
-                    optionPart: adj_obs
-                    optionName: plots
-                  - name: plots_adj_preds
-                    type: CheckBox
-                    optionPart: adj_pred
-                    optionName: plots
+              - name: plots_adj
+                type: CheckBox
+                optionPart: adj
+                optionName: plots
+              - name: plots_adj_obs
+                type: CheckBox
+                optionPart: adj_obs
+                optionName: plots
+              - name: plots_adj_preds
+                type: CheckBox
+                optionPart: adj_pred
+                optionName: plots
+              - name: plots_raw_preds
+                type: CheckBox
+                optionPart: raw_pred
+                optionName: plots
           - type: Label
             label: Options
             children:
-                  - name: plot_es
-                    type: CheckBox
+              - name: plot_es
+                type: CheckBox

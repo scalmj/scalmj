@@ -189,7 +189,8 @@ adjustingOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=list(
                     "adj",
                     "adj_obs",
-                    "adj_pred"))
+                    "adj_pred",
+                    "raw_pred"))
             private$..plot_es <- jmvcore::OptionBool$new(
                 "plot_es",
                 plot_es,
@@ -475,6 +476,7 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     adj = function() private$.items[["adj"]],
                     adj_obs = function() private$.items[["adj_obs"]],
                     adj_pred = function() private$.items[["adj_pred"]],
+                    raw_pred = function() private$.items[["raw_pred"]],
                     issues = function() private$.items[["issues"]]),
                 private = list(),
                 public=list(
@@ -508,6 +510,17 @@ adjustingResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                 options=options,
                                 title="",
                                 renderFun=".plot_adj_pred",
+                                width=700,
+                                height=400)))
+                        self$add(jmvcore::Array$new(
+                            options=options,
+                            name="raw_pred",
+                            title="Raw Scores - Predictors",
+                            visible="(plots:raw_pred)",
+                            template=jmvcore::Image$new(
+                                options=options,
+                                title="",
+                                renderFun=".plot_raw_pred",
                                 width=700,
                                 height=400)))
                         self$add(jmvcore::Html$new(
@@ -674,6 +687,7 @@ adjustingBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$plots$adj} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plots$adj_obs} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plots$adj_pred} \tab \tab \tab \tab \tab an array \cr
+#'   \code{results$plots$raw_pred} \tab \tab \tab \tab \tab an array \cr
 #'   \code{results$plots$issues} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$scores$formula} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$scores$es} \tab \tab \tab \tab \tab a table \cr
