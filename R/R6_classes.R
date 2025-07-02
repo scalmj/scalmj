@@ -31,6 +31,7 @@ Adjuster <- R6::R6Class("Adjuster",
       return(as.numeric(score))
     },
     percentiles=function() {
+      
       if (is.null(self$perc_type))
           p<- seq(0.01, .99, by = 0.01)
       else

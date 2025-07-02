@@ -75,11 +75,11 @@ options:
             -   name: lin
                 title: Linear
             -   name: ln
-                title: Natural Logarithm
+                title: Natural Logarithm (Ln)
             -   name: log10
-                title: Base 10 Log
+                title: Base 10 Log (Log10)
             -   name: log100
-                title: Log(100-x)
+                title: Log10(100-x)
             -   name: rec
                 title: Reciprocal (1/y)
             -   name: sqrt
@@ -117,10 +117,6 @@ options:
         description:
             R: Update this when R package is to be dealt with
 
-    -   name: comb_details
-        title: Show Selection 
-        type: Bool
-        default: false
 
     -   name: direction
         title: Most problematic scores
