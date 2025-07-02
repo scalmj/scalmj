@@ -110,6 +110,12 @@ adjustingClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             plot <- private$.plotter$plot_raw_pred(image, ggtheme, theme)
             return(plot)
           
+        },
+        .sourcifyOption = function(option) {
+         
+        
+          defaults <- c(forced="auto")
+          sourcifyOption(option, defaults)
         }
         
 

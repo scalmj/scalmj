@@ -14,9 +14,14 @@ Initer <- R6::R6Class(
             ### we want to clean the html message objects
             dispatch_message_cleaner(jmvobj)
             ## initialize the "info" accordion
-            si<-SmartInfo$new(jmvobj)
-            si$infovec<-INFO
-            si$info()
+            
+
+            if (self$options$.interface=="jamovi") {
+               si<-SmartInfo$new(jmvobj)
+               si$infovec<-INFO
+               si$infotag<-self$options$method  
+               si$info()
+            }
           #### check if we can go
          
             if (is.null(self$options$dep)) {
@@ -33,8 +38,7 @@ Initer <- R6::R6Class(
             }
             
             if (!self$ok) return()
-          si$infotag<-self$options$method  
-          si$info()
+          
           ## set the selector clss as the selector
           self$selector<-Selector$new(private$.checkdata())
           ## general stuff

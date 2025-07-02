@@ -3,7 +3,7 @@ title: Scores Adjustment
 menuGroup: Scores & Norms
 version: 0.0.3
 jas: '1.2'
-export: true
+export: false
 completeWhenFilled: false
 description:
     main: |

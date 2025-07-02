@@ -1,5 +1,6 @@
 Adjuster <- R6::R6Class("Adjuster",
   inherit = Scaffold,
+  cloneable=FALSE,
   public = list(
   
     perc_type=NULL,

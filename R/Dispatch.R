@@ -71,7 +71,11 @@ Dispatch <- R6::R6Class(
                                 
                                 if (inherits(table,"Html")) {
                                   if (self$interface=="R") {
-                                       warning(obj$message,call. = FALSE) 
+                                        msg<-gsub("<[^>]+>", "", obj$message)
+                                        if (utils::hasName(obj,"head") && obj$head=="info")
+                                          message(msg)
+                                        else
+                                          warning(msg,call. = FALSE) 
                                        return()
                                   } else {
                                        content<-private$.process_html(table$content,obj)
