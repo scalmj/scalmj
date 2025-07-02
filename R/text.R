@@ -42,6 +42,6 @@ INFO[["adjusting_comb"]]<-"<p>Here you can obtain an adjusting function to adjus
                     <p> The selected method is <b> Transformations combinations </b>:</p>
                     <ul>
                     <li> All possible combinations of transformations of the (Table <i>Transformation combinations details</i>)</li>
-                    <li> blablab  </li>
+                    <li> blablabXXX  </li>
                     </ul>
                    "
