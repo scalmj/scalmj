@@ -552,7 +552,7 @@ Selector <- R6::R6Class("Selector",
                 }
 
       
-      steps<-MASS::stepAIC(model,direction="both",trace=0,scope=scope)
+      steps<-MASS::stepAIC(model,direction="backward",trace=0,scope=scope)
       self$model<-steps
       if (length(self$model$coefficients)==1)
                return()
